@@ -183,6 +183,33 @@ class Model {
   isModified(fieldname){
     return false
   }
+
+  findOne(params, callback){
+    callback.call( this, "", {})
+    return true
+  }
+
+  findById( params, callback){
+    callback.call( this, "", {})
+    return true
+  }
+
+  save(callback){
+    callback.call( this, "")
+    return true
+  }
+
+  deleteOne(params, callback){
+    callback.call( this, "" )
+    return true
+  }
+
+  where( params ){
+    // all of these functions should actually return some kind of query object which is executed by the last 
+    // method... so that calls can be chained like: findOne(params, callback).where(params).gt(field)
+    return true
+  }
+
 }
 
 class Schema {
