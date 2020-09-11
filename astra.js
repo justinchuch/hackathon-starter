@@ -168,7 +168,21 @@ connection.on = register_for_event
 // register a model
 function model(model_name, schema_instance){
   // TODO: this is probably where we should initialize the schema
-  models['model_name'] = schema_instance
+  models[model_name] = schema_instance
+  return schema_instance.model
+}
+
+// utility classess
+class Model {
+  // stubs for the model
+  constructor( schema_definition ){
+    Object.entries( schema_definition ).forEach(
+      ([key,val]) => this[key] = undefined)
+  }
+
+  isModified(fieldname){
+    return false
+  }
 }
 
 class Schema {
@@ -176,15 +190,16 @@ class Schema {
     this.schema_definition = schema_definition
     this.schema_options = schema_options
     this.methods = {}
+    this.model = new Model( schema_definition )
   }
 
   pre( event_name, callback ){
-    // expects a "next" callback to be passed in
-    callback.call( this, () => {})
+    // expects a "next" callback to facilitate the model lifecycle
+    callback.call( this.model, () => {})
     return true
   }
 }
 
 
-const astra = { get, post, authenticate, token, connection, Schema }
+const astra = { get, post, authenticate, token, connection, Schema, model, connect }
 module.exports = astra
