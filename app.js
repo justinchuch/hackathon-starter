@@ -10,10 +10,9 @@ const chalk = require('chalk');
 const errorHandler = require('errorhandler');
 const lusca = require('lusca');
 const dotenv = require('dotenv');
-const MongoStore = require('connect-mongo')(session);
 const flash = require('express-flash');
 const path = require('path');
-const mongoose = require('mongoose');
+const astra = require('./astra');
 const passport = require('passport');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
@@ -45,23 +44,20 @@ const passportConfig = require('./config/passport');
 const app = express();
 
 /**
- * Connect to MongoDB.
+ * Connect to Astra
  */
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect(process.env.MONGODB_URI);
-mongoose.connection.on('error', (err) => {
+astra.connect(process.env.ASTRA_URI, process.env.ASTRA_USER, process.env.ASTRA_PASS);
+astra.connection.on('error', (err) => {
   console.error(err);
-  console.log('%s MongoDB connection error. Please make sure MongoDB is running.', chalk.red('✗'));
+  console.log('%s Astra connection error. Please make sure your Astra credentials are correct.', chalk.red('✗'));
   process.exit();
 });
+
 
 /**
  * Express configuration.
  */
-app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
+app.set('host', process.env.OPENSHIFT_NODEJS_IP || '1.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

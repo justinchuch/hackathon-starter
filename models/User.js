@@ -1,8 +1,8 @@
+const astra = require('../astra');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
+const userSchema = new astra.Schema({
   email: { type: String, unique: true },
   password: String,
   passwordResetToken: String,
@@ -70,6 +70,6 @@ userSchema.methods.gravatar = function gravatar(size) {
   return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
 };
 
-const User = mongoose.model('User', userSchema);
+const User = astra.model('User', userSchema);
 
 module.exports = User;
